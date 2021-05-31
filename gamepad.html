@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<body>
+<pre><code id="log"></code></pre>
+<style>
+	pre { display: inline-grid }
+</style>
+<script>
+function log(msg) {
+	document.querySelector('#log').innerText += msg+'\n';
+}
+var controllers = {};
+var loop;
+function connecthandler({ gamepad }) {
+	log('gamepadconnected: '+gamepad.id);
+	controllers[gamepad.index] = gamepad;
+	for (var i=0; i<gamepad.buttons.length; i++) {
+		var e = document.createElement("code");
+		e.id = 'button_'+i;
+		e.innerHTML = 'Button '+i;
+		document.querySelector('pre').appendChild(e);
+	}
+	for (i=0; i<gamepad.axes.length; i++) {
+		var e = document.createElement("code");
+		e.id = 'axis_'+i;
+		e.innerHTML = 'Axis '+i;
+		document.querySelector('pre').appendChild(e);
+	}
+	loop = window.requestAnimationFrame(updateStatus);
+}
+function disconnecthandler({ gamepad }) {
+	log('gamepaddisconnected: '+gamepad.id);
+	cancelAnimationFrame(loop);
+	delete controllers[gamepad.index];
+}
+function updateStatus() {
+	let mapb = [
+		'Y', 'B', 'A', 'X', 'LB', 'RB', 'LT', 'RT', 'select', 'start', 'LS', 'RS', 'GUIDE'
+	], mapa = [
+		'LSH', 'LSV', 'RSH', 'RSV', 'LKH', 'LKV'
+	];
+	scangamepads();
+	for (j in controllers) {
+		var controller = controllers[j];
+		for (var i=0; i<controller.buttons.length; i++) {
+			var b = document.querySelector('#button_'+i);
+			var val = controller.buttons[i];
+			var pressed = val == 1.0;
+			var touched = false;
+			if (typeof(val) == "object") {
+				pressed = val.pressed;
+				if ('touched' in val)
+					touched = val.touched;
+				val = val.value;
+			}
+			var pct = Math.round(val * 100) + "%";
+			b.innerHTML = '('+mapb[i]+') '+'Button '+i+': '+pct;
+			if (pressed)
+				b.innerHTML += ": pressed";
+			if (touched)
+				b.innerHTML += ": touched";
+		}
+		for (var i=0; i<controller.axes.length; i++) {
+			var a = document.querySelector('#axis_'+i);
+			a.innerHTML = '('+mapa[i]+') '+'Axis '+i+': '+controller.axes[i];
+		}
+	}
+	window.requestAnimationFrame(updateStatus);
+}
+function scangamepads() {
+	// var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+	var gamepads = navigator.getGamepads();
+	for (var i = 0; i < gamepads.length; i++) {
+		if (gamepads[i] && (gamepads[i].index in controllers))
+			controllers[gamepads[i].index] = gamepads[i];
+	}
+}
+
+log(navigator.userAgent);
+if ('GamepadEvent' in window) {
+	log('GamepadEvent: 1');
+	window.addEventListener("gamepadconnected", connecthandler);
+	window.addEventListener("gamepaddisconnected", disconnecthandler);
+}else{
+	log('GamepadEvent: 0');
+	setInterval(scangamepads, 500);
+}
+
+/*
+var i = 1;
+window.addEventListener("gamepadconnected", function(e) {
+  var gp = navigator.getGamepads()[e.gamepad.index];
+  document.getElementById("gpInfo").innerHTML = ("A " + gp.id + " was successfully detected! There are a total of " + gp.buttons.length + " buttons.")
+  //alert("A " + gp.id + " was successfully detected!")
+
+  setInterval(function(){
+    isPressed = gp.buttons[0].pressed;
+    document.getElementById("button").innerHTML = isPressed;
+  }, 100)
+});
+*/
+
+</script>
+</body>
+</html>
