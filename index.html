@@ -3,12 +3,16 @@
 <body>
 <pre><code id="log"></code></pre>
 <style>
+	body { background: lightgreen }
 	pre { display: inline-grid }
 </style>
 <script>
 function log(msg) {
 	document.querySelector('#log').innerText += msg+'\n';
 }
+
+log(navigator.userAgent);
+log('Mode: '+(navigator.userAgent.match(/(steam|smart-tv)/i) ? 'TV' : 'tablet'));
 var controllers = {};
 var loop;
 function connecthandler(e) {
@@ -77,8 +81,6 @@ function scangamepads() {
 			controllers[gamepads[i].index] = gamepads[i];
 	}
 }
-
-log(navigator.userAgent);
 if ('GamepadEvent' in window) {
 	log('GamepadEvent: 1');
 	window.addEventListener("gamepadconnected", connecthandler);
