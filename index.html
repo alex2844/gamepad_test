@@ -18,6 +18,7 @@ var loop;
 function connecthandler(e) {
 	var gamepad = e.gamepad;
 	log('gamepadconnected: '+gamepad.id);
+	log('mapping: '+gamepad.mapping);
 	controllers[gamepad.index] = gamepad;
 	for (var i=0; i<gamepad.buttons.length; i++) {
 		var e = document.createElement("code");
@@ -41,9 +42,11 @@ function disconnecthandler(e) {
 }
 function updateStatus() {
 	var mapb = [
-		'Y', 'B', 'A', 'X', 'LB', 'RB', 'LT', 'RT', 'select', 'start', 'LS', 'RS', 'GUIDE'
+		[ 'Y', 'B', 'A', 'X', 'LB', 'RB', 'LT', 'RT', 'select', 'start', 'LS', 'RS', 'GUIDE' ],
+		[ 'A', 'B', 'X', 'Y', 'LB', 'RB', 'LT', 'RT', 'select', 'start', 'LS', 'RS', 'LKVU', 'LKVD', 'LKHL', 'LKHR', 'GUIDE' ]
 	], mapa = [
-		'LSH', 'LSV', 'RSH', 'RSV', 'LKH', 'LKV'
+		[ 'LSH', 'LSV', 'RSH', 'RSV', 'LKH', 'LKV' ],
+		[ 'LSH', 'LSV', 'RSH', 'RSV' ]
 	];
 	scangamepads();
 	for (j in controllers) {
@@ -60,7 +63,7 @@ function updateStatus() {
 				val = val.value;
 			}
 			var pct = Math.round(val * 100) + "%";
-			b.innerHTML = '('+mapb[i]+') '+'Button '+i+': '+pct;
+			b.innerHTML = '('+mapb[0][i]+'/'+mapb[1][i]+') '+'Button '+i+': '+pct;
 			if (pressed)
 				b.innerHTML += ": pressed";
 			if (touched)
@@ -68,7 +71,7 @@ function updateStatus() {
 		}
 		for (var i=0; i<controller.axes.length; i++) {
 			var a = document.querySelector('#axis_'+i);
-			a.innerHTML = '('+mapa[i]+') '+'Axis '+i+': '+controller.axes[i];
+			a.innerHTML = '('+mapa[0][i]+'/'+mapa[1][i]+') '+'Axis '+i+': '+controller.axes[i];
 		}
 	}
 	window.requestAnimationFrame(updateStatus);
@@ -91,6 +94,10 @@ if ('GamepadEvent' in window) {
 }
 
 /*
+// https://codepen.io/canvasplay/pen/RodgVr
+// https://codepen.io/diamondx911/pen/mBgYgJ
+// https://codepen.io/alvaromontoro/pen/bGbpmvR
+// https://codepen.io/benoitwimart/pen/qRJywG
 var i = 1;
 window.addEventListener("gamepadconnected", function(e) {
   var gp = navigator.getGamepads()[e.gamepad.index];
