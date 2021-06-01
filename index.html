@@ -11,7 +11,8 @@ function log(msg) {
 }
 var controllers = {};
 var loop;
-function connecthandler({ gamepad }) {
+function connecthandler(e) {
+	var gamepad = e.gamepad;
 	log('gamepadconnected: '+gamepad.id);
 	controllers[gamepad.index] = gamepad;
 	for (var i=0; i<gamepad.buttons.length; i++) {
@@ -28,13 +29,14 @@ function connecthandler({ gamepad }) {
 	}
 	loop = window.requestAnimationFrame(updateStatus);
 }
-function disconnecthandler({ gamepad }) {
+function disconnecthandler(e) {
+	var gamepad = e.gamepad;
 	log('gamepaddisconnected: '+gamepad.id);
 	cancelAnimationFrame(loop);
 	delete controllers[gamepad.index];
 }
 function updateStatus() {
-	let mapb = [
+	var mapb = [
 		'Y', 'B', 'A', 'X', 'LB', 'RB', 'LT', 'RT', 'select', 'start', 'LS', 'RS', 'GUIDE'
 	], mapa = [
 		'LSH', 'LSV', 'RSH', 'RSV', 'LKH', 'LKV'
