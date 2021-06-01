@@ -11,6 +11,7 @@ function log(msg) {
 	document.querySelector('#log').innerText += msg+'\n';
 }
 
+log('210701.1732');
 log(navigator.userAgent);
 log('Mode: '+(navigator.userAgent.match(/(steam|smart-tv)/i) ? 'TV' : 'tablet'));
 var controllers = {};
@@ -88,6 +89,12 @@ if ('GamepadEvent' in window) {
 	log('GamepadEvent: 1');
 	window.addEventListener("gamepadconnected", connecthandler);
 	window.addEventListener("gamepaddisconnected", disconnecthandler);
+	window.addEventListener("keyup", function(e) {
+		log('Keyup: '+e.key);
+	});
+	window.addEventListener("keydown", function(e) {
+		log('Keydown: '+e.key);
+	});
 }else{
 	log('GamepadEvent: 0');
 	setInterval(scangamepads, 500);
