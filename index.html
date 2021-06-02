@@ -11,7 +11,7 @@ function log(msg) {
 	document.querySelector('#log').innerText += msg+'\n';
 }
 
-log('210701.1732');
+log('210702.1928');
 log(navigator.userAgent);
 log('Mode: '+(navigator.userAgent.match(/(steam|smart-tv)/i) ? 'TV' : 'tablet'));
 var controllers = {};
@@ -90,9 +90,13 @@ if ('GamepadEvent' in window) {
 	window.addEventListener("gamepadconnected", connecthandler);
 	window.addEventListener("gamepaddisconnected", disconnecthandler);
 	window.addEventListener("keyup", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		log('Keyup: '+e.key);
 	});
 	window.addEventListener("keydown", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		log('Keydown: '+e.key);
 	});
 }else{
@@ -101,6 +105,7 @@ if ('GamepadEvent' in window) {
 }
 
 /*
+// https://w3c.github.io/gamepad/
 // https://codepen.io/canvasplay/pen/RodgVr
 // https://codepen.io/diamondx911/pen/mBgYgJ
 // https://codepen.io/alvaromontoro/pen/bGbpmvR
