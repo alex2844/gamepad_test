@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <body>
+	<a target="_blank" href="example-3-buttons-and-joysticks.html">example 1</a>
+	<a target="_blank" href="example-4-snes-controller.html">example 2</a>
+	<a target="_blank" href="example-5-alvanoid.html">example 3</a>
+	<a target="_blank" href="example-7-joystick-threshold.html">example 4</a>
 <pre><code id="log"></code></pre>
 <style>
 	body { background: lightgreen }
@@ -80,7 +84,6 @@ function updateStatus() {
 	window.requestAnimationFrame(updateStatus);
 }
 function scangamepads() {
-	// var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
 	var gamepads = navigator.getGamepads();
 	for (var i = 0; i < gamepads.length; i++) {
 		if (gamepads[i] && (gamepads[i].index in controllers))
@@ -88,34 +91,11 @@ function scangamepads() {
 	}
 }
 if ('GamepadEvent' in window) {
-	// log('GamepadEvent: 1');
 	window.addEventListener("gamepadconnected", connecthandler);
 	window.addEventListener("gamepaddisconnected", disconnecthandler);
-	/*
-	window.addEventListener("keyup", function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		log('Keyup: '+e.key);
-	});
-	window.addEventListener("keydown", function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		log('Keydown: '+e.key);
-	});
-	*/
-/*
-}else{
-	log('GamepadEvent: 0');
-	setInterval(scangamepads, 500);
-*/
 }
 
 /*
-// https://w3c.github.io/gamepad/
-// https://codepen.io/canvasplay/pen/RodgVr
-// https://codepen.io/diamondx911/pen/mBgYgJ
-// https://codepen.io/alvaromontoro/pen/bGbpmvR
-// https://codepen.io/benoitwimart/pen/qRJywG
 var i = 1;
 window.addEventListener("gamepadconnected", function(e) {
   var gp = navigator.getGamepads()[e.gamepad.index];
